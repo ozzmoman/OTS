@@ -1,6 +1,7 @@
 import User from "../model/user.model.js";
+import { errorHandler } from '../';
 
-export const signup = async (req, res) => {
+export const signup = async (req, res, next) => {
     const { email, username, tel, password } =  req.body;
     const newUser = new User({ email, username, tel, password });
     
@@ -9,6 +10,6 @@ export const signup = async (req, res) => {
     res.status(201).json("User created succesfully");
 
     } catch(error) {
-        res.status(500).json(error.message);
+        next(error);
     }
 };

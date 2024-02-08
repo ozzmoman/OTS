@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function Signup() {
     const [formData, setFormData] = useState({});
@@ -17,9 +17,10 @@ export default function Signup() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        try {
         setLoading(true);
-        const res = await fetch('/api/register', 
-         {
+        const res = await fetch('/api/auth/signup', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -27,12 +28,19 @@ export default function Signup() {
             body: JSON.stringify(formData),
          });
          const data = await res.json();
-         
-         console.log(data);
-        };
-        console.log(formData);
-
-  
+         if (data.success === false) {
+            setError(data.message);
+            return;
+         }  
+         setLoading(false);
+        } catch (error) {
+         setLoading(false);
+         setError(error.message);
+        console.log(data);  
+        }
+        
+};
+      console.log(formData);
              
     return (
         <div className='signup__container'>
@@ -71,14 +79,17 @@ export default function Signup() {
                     required
                     onChange={handleChange}
                 />
-                <button className='signupBtn'>SIGN UP</button>
-                <p>
-                    Already have an account?{" "}
-                    <span className='link' onClick={handleSubmit}>
+                <button disabled={loading} className='signupBtn'>
+                    {loading ? 'Loading...' : 'Sign Up'}
+                </button>
+                </form>
+                   <p>Already have an account?</p>
+                   <Link to={'/Login'}>
+                     <span className='link' onClick={handleSubmit}>
                         Login
-                    </span>
-                </p>
-            </form>
+                     </span>
+                </Link>
+                {error && <p>{error}</p>}            
         </div>
     );
 };
