@@ -1,5 +1,5 @@
 import User from "../model/user.model.js";
-import { errorHandler } from '../';
+import { errorHandler } from '../utils/error.js';
 
 export const signup = async (req, res, next) => {
     const { email, username, tel, password } =  req.body;
