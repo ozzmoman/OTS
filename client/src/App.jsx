@@ -11,7 +11,7 @@ function App() {
                 <Route path='/' element={<Login />} />
                 <Route path='/register' element={<Signup />} />
                 <Route path='/dashboard' element={<Dashboard />} />
-                <Route path='phone/verify' element={<PhoneVerify />} />
+                <Route path='/phoneverify' element={<PhoneVerify />} />
             </Routes>
         </BrowserRouter>
     );
