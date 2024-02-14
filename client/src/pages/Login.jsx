@@ -1,54 +1,82 @@
 
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const Login = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+export default function Signin() {
+    const [formData, setFormData] = useState({});
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+        [e.target.id]: e.target.value,
+    });
+};
 
-    const handleSubmit = (e) => {
+ //   const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log({ email, password });
-        setPassword("");
-        setEmail("");
-    };
 
-    const gotoSignUpPage = () => navigate("/register");
-
+        try {
+        setLoading(true);
+        const res = await fetch('/api/auth/signin', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+         });
+         const data = await res.json();
+         if (data.success === false) {
+            setError(data.message);
+            return;
+         }  
+         setLoading(false);
+         setError(null);
+         navigate("/Dashboard");
+        } catch (error) {
+         setLoading(false);
+         setError(error.message);
+        }
+        
+};
+      console.log(formData);
+             
     return (
-        <div className='login__container'>
-            <h2>Login </h2>
-            <form className='login__form' onSubmit={handleSubmit}>
-                <label htmlFor='email'>Email</label>
+        <div className='signup__container'>
+            <h2>Sign in </h2>
+            <form className='signup__form' onSubmit={handleSubmit}>
+                <label htmlFor='email'>Email Address</label>
                 <input
-                    type='text'
-                    id='email'
+                    type='email'
                     name='email'
-                    value={email}
+                    id='email'
                     required
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={handleChange}
                 />
-                <label htmlFor='password'>Password</label>
+                <label htmlFor='tel'>Password</label>
                 <input
                     type='password'
                     name='password'
                     id='password'
                     minLength={8}
                     required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={handleChange}
                 />
-                <button className='loginBtn'>SIGN IN</button>
-                <p>
-                    Don't have an account?{" "}
-                    <span className='link' onClick={gotoSignUpPage}>
+                <button disabled={loading} className='signupBtn'>
+                    {loading ? 'Loading...' : 'Sign In'}
+                </button>
+                </form>
+                   <p>Dont have an account?</p>
+                   <Link to={'/register'}>
+                     <span className='link'>
                         Sign up
-                    </span>
-                </p>
-            </form>
+                     </span>
+                </Link>
+                {error && <p>{error}</p>}            
         </div>
     );
 };
 
-export default Login;
