@@ -2,7 +2,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const PhoneVerify = () => {
+
+export default function PhoneVerify() {
     const [code, setCode] = useState("");
     const navigate = useNavigate();
 
@@ -10,7 +11,7 @@ const PhoneVerify = () => {
         e.preventDefault();
         console.log({ code });
         setCode("");
-        navigate("/dashboard");
+        navigate('/dashboard');
     };
     return (
         <div className='verify'>
@@ -33,5 +34,3 @@ const PhoneVerify = () => {
         </div>
     );
 };
-
-export default PhoneVerify;

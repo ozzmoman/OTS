@@ -35,7 +35,7 @@ export default function Signin() {
          }  
          setLoading(false);
          setError(null);
-         navigate("/Dashboard");
+         navigate("/phoneverify");
         } catch (error) {
          setLoading(false);
          setError(error.message);
